@@ -20,5 +20,6 @@ from django.urls import path, include
 # and send the rest of the url after the pattern to the corresponding urls.py
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    path('', include('frontend.urls'))
 ]
