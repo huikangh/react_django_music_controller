@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import { render } from "react-dom"
+import HomePage from "./HomePage"
+
 
 // this is a class component as opposed to a functional component
 export default class App extends Component {
@@ -8,9 +10,12 @@ export default class App extends Component {
     }
 
     render() {
-        return <h1>Testing React Code</h1>
+        return (<div>
+            <HomePage />
+        </div>)
     }
 }
+
 
 const appDiv = document.getElementById("app")
 render(<App />, appDiv)

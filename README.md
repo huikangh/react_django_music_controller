@@ -13,3 +13,8 @@
 - added script file, webpack.config.js, which bundles all javascript into one file and server to browser
 - set up url endpoint in music_controller/urls.py so a blank url would be route to frontend/urls.py, which then a blank url again would route to the "index" view
 - when we run the webpack script with "npm run dev", the script looks at index.js file, bundles all the js files together as one "main.js" in the frontend folder, the file would then be rendered as the frontend "index" view
+
+- Part#4
+- Created different react components for different pages: HomePage, CreateRoomPage, RoomJoinPage
+- utilized react router in HomePage to route to different components (CreatRoomPage & RoomJoinPage) with assigned paths
+- in order to actually set up the routing, we have to add the routes in both Django (in frontend/urls.py) and React (HomePage.js)
