@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
-from .serializers import RoomSerializer
+from .serializers import RoomSerializer, CreateRoomSerializer
 from .models import Room
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,7 +20,8 @@ class RoomView(generics.ListAPIView):
 # APIView allows us to override default methods like GET and POST
 class CreateRoomView(APIView):
     serializer_class = CreateRoomSerializer
-
+    
+    # overidding POST method
     def post(self, request, format=None):
         # check if current user has an active session in the server
         if not self.request.session.exists(self.request.session.session_key):
@@ -43,11 +44,13 @@ class CreateRoomView(APIView):
                 room = queryset[0]
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
-                room.save(update_fields=['guest_can_pause', 'votes_t0_skip'])
+                room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
+                return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
             # if no room, create a new one
             else:
                 room = Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
                 room.save()
+                return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
             
-            # return a response to the request sender (204 == create)
-            return Response(RoomSerializer(room).data, status=status.HTTP_204)
+        # if the request data is invalid, return a bad request response 400
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)

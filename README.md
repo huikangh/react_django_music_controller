@@ -29,3 +29,10 @@
 - to create/update a room, the view extracts information from the user's POST request such as guest_can_pause, votes_to_skip, and even the session key, provided by the user at the frontend
 - whenever we connect to a website, we would establish a session, this allows the website to maintain our state when we revisit (ex. we don't have to re-login)
 - our backend server will stores and identifies user by their sessions
+
+#### Part#6
+
+- added more react jsx and html/css code, such as radio buttons, text fields, and buttons in frontend/components/CreateRoomPage.js to style the frontend webpage
+- added react states, guestCanPause and votesToSkip, in CreateRoomPage to keep track of the information entered by the user
+- added functions, handleVotesChange(), handleGuestCanPauseChange(), and handleRoomButtonPressed() that handle different events in CreateRoomPage
+- specifically, handleRoomButtonPressed() gathered all the user entered information from the component states, and send a POST request to the api/create-room backend endpoint to create a room in the server

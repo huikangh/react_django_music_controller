@@ -8,13 +8,12 @@ def generate_unique_code():
         # generate a random list of upper case letters of length k
         letters = random.choices(string.ascii_uppercase, k=length)
         # turn the list into a string to be our code
-        code = "".join(letters)
+        code = ''.join(random.choices(string.ascii_uppercase, k=length))
         # check whether the code already exist
         # if not, break the while loop and return code
-        if Room.objects.filter(code=code).count == 0:
+        if Room.objects.filter(code=code).count() == 0:
             break
     return code
-
 
 
 # Create your models here.
@@ -25,4 +24,3 @@ class Room(models.Model):
     votes_to_skip = models.IntegerField(null=False, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    
