@@ -36,3 +36,11 @@
 - added react states, guestCanPause and votesToSkip, in CreateRoomPage to keep track of the information entered by the user
 - added functions, handleVotesChange(), handleGuestCanPauseChange(), and handleRoomButtonPressed() that handle different events in CreateRoomPage
 - specifically, handleRoomButtonPressed() gathered all the user entered information from the component states, and send a POST request to the api/create-room backend endpoint to create a room in the server
+
+#### Part#7
+
+- added Room.js that allows us to view specific rooms
+- added a backend view, GetRoom, that allow us to fetch for the room data based on the room code
+- send up endpoint for the backedn view, GetRoom, with the pattern "room/:roomCode" where any string after the "room/" pattern will be processed as the room code
+- Room.js will send a GET request to the api/get-room endpoint with the room code, which then the GetRoom view would process the room code in the url and return the room data back, then Room.js utilizes the returned response and fill up the page with the room's data
+- edited CreateRoomPage.js so upon creating a new room, the webpage will navigate to the newly created room page
