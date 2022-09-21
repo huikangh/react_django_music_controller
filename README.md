@@ -40,7 +40,15 @@
 #### Part#7
 
 - added Room.js that allows us to view specific rooms
-- added a backend view, GetRoom, that allow us to fetch for the room data based on the room code
+- added a backend view, GetRoom, that allows frontend to fetch for the room data based on the room code
 - send up endpoint for the backedn view, GetRoom, with the pattern "room/:roomCode" where any string after the "room/" pattern will be processed as the room code
 - Room.js will send a GET request to the api/get-room endpoint with the room code, which then the GetRoom view would process the room code in the url and return the room data back, then Room.js utilizes the returned response and fill up the page with the room's data
 - edited CreateRoomPage.js so upon creating a new room, the webpage will navigate to the newly created room page
+
+#### Part#8
+
+- edited index.css to center the app class
+- added a backend view, JoinRoom, that allows the frontend user to fetch for existing room to join nased on the room code
+- added more react jsx and html/css code, such as textfield and buttons in frontend/components/JoinRoomPage.js to style the frontend webpage
+- added react states and functions in JoinRoomPage.js to keep track of the information entered by the user and handle user actions like a button click
+- specifically, roomButtonPressed() in JoinRoomPage gathered the user entered room code from the component state, and send a POST request to the api/join-room backend endpoint to find and join the existing room

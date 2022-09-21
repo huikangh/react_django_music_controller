@@ -30,7 +30,7 @@ export default function CreateRoomPage(props) {
         setGuestCanPause(event.target.value === "true" ? true : false)
     }
 
-    // set a POST request with the state values in a JSON format to the backend end point
+    // send a POST request with the state values in a JSON format to the backend end point
     function handleRoomButtonPressed() {
         const requestOptions = {
             method: "POST",
