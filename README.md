@@ -65,3 +65,10 @@
 - styled the RoomPage by using Typography and adding a back button to leave the RoomPage
 - added a function, leaveButtonPressed(), in Room.js that sends a POST request to the backend to leave the room when the button is pressed. When the request is done, the room_code state in HomePage.js will be reset and the user will be redirected to the HomePage
 - added a backend view, LeaveRoom, that allows the user to leave the current room by removing the room_code stored in the user's session. If the user is also the host, the room would also be deleted
+
+#### Part#11
+
+- added a backend view, UpdateRoom, that allows the host of a room to update room settings by taking in a room code and the new settings for the room, then updates the setting of the room in the backend model/database
+- added a Settings button in Room.js that shows up only if the user is the host of the room
+- added a boolean state in Room.js, showSettings, that determines whether or not to render the Settings page
+- added a component that is reusing the CreateRoomPage component in Room.js to render the Settings page when the host clicks on the Settings button

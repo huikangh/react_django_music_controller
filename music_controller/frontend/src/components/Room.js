@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; 
 import { Grid, Button, Typography } from "@material-ui/core";
+import CreateRoomPage from "./CreateRoomPage";
 
 export default function Room(props) {
     
-    const[votesToSkip, setVotesToSkip] = useState(2);
-    const[guestCanPause, setGuestCanPause] = useState(false);
-    const[isHost, setIsHost] = useState(false);
+    const [votesToSkip, setVotesToSkip] = useState(2);
+    const [guestCanPause, setGuestCanPause] = useState(false);
+    const [isHost, setIsHost] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
 
     const navigate = useNavigate();
     
@@ -27,6 +29,45 @@ export default function Room(props) {
         )
     }
 
+    function updateShowSettings(value) {
+        setShowSettings(value)
+    }
+
+    function renderSettings() {
+        return (
+            <Grid container spacing={1}>
+
+                <Grid item xs={12} align="center">
+                    <CreateRoomPage 
+                        update={true} 
+                        votesToSkip={votesToSkip} 
+                        guestCanPause={guestCanPause} 
+                        roomCode={roomCode}
+                        // updateCallback={} 
+                    />
+                </Grid>
+
+                <Grid item xs={12} align="center">
+                    <Button variant="contained" color="secondary" onClick={()=>updateShowSettings(false)}>
+                        Close
+                    </Button>
+                </Grid>
+
+            </Grid>
+        )
+    }
+
+    // only render Settings button if user is the host
+    function renderSettingsButton() {
+        return (
+            <Grid item xs={12} align="center">
+                <Button variant="contained" color="primary" onClick={() => updateShowSettings(true)}>
+                    Settings
+                </Button>
+            </Grid>
+        );
+    }
+
     // send a GET request to /api/get-room to fetch for room data using the roomcCode
     fetch('/api/get-room' + '?code=' + roomCode)
             .then((response) => {
@@ -43,8 +84,13 @@ export default function Room(props) {
                 setIsHost(data.is_host)
             })
 
-    return (
 
+    // if showSettings is true, render the Settings component instead
+    if (showSettings) {
+        return renderSettings();
+    }
+
+    return (
         <Grid container spacing={1}>
 
             <Grid item xs={12} align="center">
@@ -70,6 +116,8 @@ export default function Room(props) {
                     Host: {String(isHost)}
                 </Typography>
             </Grid>
+
+            {isHost ? renderSettingsButton() : null}
 
             <Grid item xs={12} align="center">
                 <Button variant="contained" color="secondary" onClick={leaveButtonPressed}>
