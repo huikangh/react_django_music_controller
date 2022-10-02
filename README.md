@@ -52,3 +52,14 @@
 - added more react jsx and html/css code, such as textfield and buttons in frontend/components/JoinRoomPage.js to style the frontend webpage
 - added react states and functions in JoinRoomPage.js to keep track of the information entered by the user and handle user actions like a button click
 - specifically, roomButtonPressed() in JoinRoomPage gathered the user entered room code from the component state, and send a POST request to the api/join-room backend endpoint to find and join the existing room
+
+#### Part#9
+
+- styled the HomePage by adding a renderHomePage() that includes a button to direct to JoinRoomPage and a button to direct to CreateRoomPage
+- right when the homepage load, we need to check if the user is already in a room, and then redirect to that room page
+- added a backend view, UserInRoom, that allows the frontend to check whether the current user is already in an existing room. If yes, the view would return the room code
+- added a frontend function at HomePage that fetch goes to the UserInRoom view to check whether user already in a room. If yes, frontend would update the roomCode state, and HomePage would be directed to RoomPage instead
+
+#### Part#10
+
+- styled the RoomPage
