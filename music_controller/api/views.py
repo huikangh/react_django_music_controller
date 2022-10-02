@@ -124,3 +124,20 @@ class UserInRoom(APIView):
         }
         # JsonResponse takes a pyhton dictionary and serialize it into a json object
         return JsonResponse(data, status=status.HTTP_200_OK)
+
+
+# api view that handles a POST request to leave the current room
+class LeaveRoom(APIView):
+    def post(self, request, format=None):
+        if 'room_code' in self.request.session:
+            self.request.session.pop('room_code')
+            # check if user is the host of the current room
+            host_id = self.request.session.session_key
+            room_results = Room.objects.filter(host=host_id)
+            # if yes, delete the current hosted room
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+
+        return Response({"Message": "Success"}, status=status.HTTP_200_OK)
+

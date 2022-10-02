@@ -11,6 +11,7 @@ export default class HomePage extends Component {
         this.state = {
             roomCode: null,
         };
+        this.clearRoomCode = this.clearRoomCode.bind(this);
     }
 
     // call an endpoint on server to check if user in an existing room
@@ -48,6 +49,11 @@ export default class HomePage extends Component {
         );
     }
 
+    clearRoomCode() {
+        this.setState({
+            roomCode: null,
+        })
+    }
 
     render() {
         return (
@@ -59,7 +65,7 @@ export default class HomePage extends Component {
                     />
                     <Route path='/join' element={<RoomJoinPage />}/>
                     <Route path='/create' element={<CreateRoomPage />}/>
-                    <Route path='/room/:roomCode' element={<Room />} />
+                    <Route path='/room/:roomCode' element={<Room leaveRoomCallback={this.clearRoomCode} />} />
                 </Routes>
             </Router>
         );
