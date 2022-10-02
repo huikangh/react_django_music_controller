@@ -153,7 +153,7 @@ class UpdateRoom(APIView):
             self.request.session.create()
 
         # pass the request data to serializer to check if its valid
-        serializer = self.serialzer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             # retrieve new inputs from the request/serializer
             guest_can_pause = serializer.data.get('guest_can_pause')

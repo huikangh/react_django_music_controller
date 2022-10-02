@@ -72,3 +72,10 @@
 - added a Settings button in Room.js that shows up only if the user is the host of the room
 - added a boolean state in Room.js, showSettings, that determines whether or not to render the Settings page
 - added a component that is reusing the CreateRoomPage component in Room.js to render the Settings page when the host clicks on the Settings button
+
+### Part#12
+
+- added functions, renderCreateButtons() and renderUpdateButtons(), in CreateRoomPage.js that renders different frontend interface depending on whether we are creating a room or updating a room
+- added function, handleUpdateButtonPressed(), in CreateRoomPage.js that handles the update room button and sends a PATCH request to a backend endpoint to update the backend database with the new room settings
+- after we updated the new room settings in the backend database, when we go back to the room and, the Room component would be re-rendered and the component would fetches for the room data and it will be retrieving the updated room data
+- added a feature using the imported Collapse and Alert components to display an alert message when the user updates room settings
