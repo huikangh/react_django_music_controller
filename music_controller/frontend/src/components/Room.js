@@ -9,6 +9,7 @@ export default function Room(props) {
     const [guestCanPause, setGuestCanPause] = useState(false);
     const [isHost, setIsHost] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false);
 
     const navigate = useNavigate();
     
@@ -68,6 +69,25 @@ export default function Room(props) {
         );
     }
 
+    // send request to backend to check whether current user is authenticated
+    function authenticateSpotify() {
+        // first check if user is authenticated
+        fetch('/spotify/is-authenticated')
+        .then((response) => response.json())
+        .then((data) => {
+            setSpotifyAuthenticated(data.status)
+            // if user is not authenticated, redirect user to Spotify authentication page
+            if (!data.status) {
+                fetch('/spotify/get-auth-url')
+                .then((response) => response.json())
+                .then((data) => {
+                    window.location.replace(data.url);
+                })
+            }
+        })
+    }
+
+
     // send a GET request to /api/get-room to fetch for room data using the roomcCode
     fetch('/api/get-room' + '?code=' + roomCode)
             .then((response) => {
@@ -82,6 +102,9 @@ export default function Room(props) {
                 setVotesToSkip(data.votes_to_skip)
                 setGuestCanPause(data.guest_can_pause)
                 setIsHost(data.is_host)
+                if (isHost) {
+                    authenticateSpotify();
+                }
             })
 
 

@@ -17,7 +17,7 @@ export default class HomePage extends Component {
     // call an endpoint on server to check if user in an existing room
     // if yes, data will contain the room code
     async componentDidMount() {
-        fetch('api/user-in-room')
+        fetch('/api/user-in-room')
             .then((response) => response.json())
             .then((data) => {
                 this.setState({roomCode: data.code})

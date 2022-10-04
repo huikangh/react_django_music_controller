@@ -79,3 +79,14 @@
 - added function, handleUpdateButtonPressed(), in CreateRoomPage.js that handles the update room button and sends a PATCH request to a backend endpoint to update the backend database with the new room settings
 - after we updated the new room settings in the backend database, when we go back to the room and, the Room component would be re-rendered and the component would fetches for the room data and it will be retrieving the updated room data
 - added a feature using the imported Collapse and Alert components to display an alert message when the user updates room settings
+
+### Part#13
+
+- created an application on Spotify Developer
+- created a new django project named spotify that handles all the interaction with the spotify API
+- added a view in spotify/views.py, AuthURL(), to handle frontend request to generate an authenticate url to the Spotify API
+- added a view in spotify/views.py, spotify_callback(), that act as a callback function that send another request to Spotify API to get access and refresh tokens after user log in and authenticate their acess
+- added a model in spotify/models.py to store all the user information we got from requesting the Spotify API (refresh_token, access_token, token_type, etc)
+- added a util.py file in /spotify that contains utility functions: get_user_tokens(), update_or_create_user_tokens(), is_spotify_authenticated(), refresh_spotify_token(), that interacts with the database model SpotifyToken
+- added a view in spotify/views.py, IsAuthenticated(), to handle frontend request to verify whether the user is authenticated by calling the util.py function is_spotify_authenticate()
+- added a function, authenticateSpotify(), in frontend/Room.js that would get called whenever a user joins a room and the user is the host of the room. The function will send a request to the app's backend to check whether the user is logged in. If not, the backend would send back a Spotify authentication url to be redirected to the Spotify page to log in. After user logs in, spotify_callback() will be called
