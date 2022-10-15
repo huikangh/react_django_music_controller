@@ -73,14 +73,14 @@
 - added a boolean state in Room.js, showSettings, that determines whether or not to render the Settings page
 - added a component that is reusing the CreateRoomPage component in Room.js to render the Settings page when the host clicks on the Settings button
 
-### Part#12
+#### Part#12
 
 - added functions, renderCreateButtons() and renderUpdateButtons(), in CreateRoomPage.js that renders different frontend interface depending on whether we are creating a room or updating a room
 - added function, handleUpdateButtonPressed(), in CreateRoomPage.js that handles the update room button and sends a PATCH request to a backend endpoint to update the backend database with the new room settings
 - after we updated the new room settings in the backend database, when we go back to the room and, the Room component would be re-rendered and the component would fetches for the room data and it will be retrieving the updated room data
 - added a feature using the imported Collapse and Alert components to display an alert message when the user updates room settings
 
-### Part#13
+#### Part#13
 
 - created an application on Spotify Developer
 - created a new django project named spotify that handles all the interaction with the spotify API
@@ -90,3 +90,11 @@
 - added a util.py file in /spotify that contains utility functions: get_user_tokens(), update_or_create_user_tokens(), is_spotify_authenticated(), refresh_spotify_token(), that interacts with the database model SpotifyToken
 - added a view in spotify/views.py, IsAuthenticated(), to handle frontend request to verify whether the user is authenticated by calling the util.py function is_spotify_authenticate()
 - added a function, authenticateSpotify(), in frontend/Room.js that would get called whenever a user joins a room and the user is the host of the room. The function will send a request to the app's backend to check whether the user is logged in. If not, the backend would send back a Spotify authentication url to be redirected to the Spotify page to log in. After user logs in, spotify_callback() will be called
+
+#### Part#14
+
+- added function execute_spotify_api_request() in spotify/util.py that send another request to the Spotify API
+- added view CurrentSong() in spotify/views.py that handles requests to send another request to the Spotify API by calling execute_spotify_api_request() to get the current song information, the view will return a custom song object containing all the needed information
+- added function, getCurrentSong(), in Room.js that sends an HTTP request to our backend endpoint to fetch for current song info
+- added new state, song, in Room.js that is an object storing all the needed information of the current playing song
+- added new React component, MusicPlayer.js, that takes in the song state with all the needed song info and renders a nice music player component

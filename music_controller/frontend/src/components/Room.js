@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { useParams, useNavigate } from "react-router-dom"; 
 import { Grid, Button, Typography } from "@material-ui/core";
 import CreateRoomPage from "./CreateRoomPage";
+import MusicPlayer from "./MusicPlayer";
 
 export default function Room(props) {
     
@@ -10,11 +11,29 @@ export default function Room(props) {
     const [isHost, setIsHost] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false);
+    const [song, setSong] = useState({});
 
     const navigate = useNavigate();
     
     // useParams() gets all parameters from the current URL matched by the route path
     const { roomCode } = useParams();
+
+    // GET request to backend to fetch for current song info
+    // then update the song state
+    function getCurrentSong() {
+        fetch('/spotify/current-song')
+            .then((response) => {
+                if (!response.ok) {
+                    return {};
+                } else {
+                    return response.json();
+                }
+            })
+            .then((data) => {
+                setSong(data);
+                console.log(data);
+            });
+    }
 
     // POST request to leave the current room
     function leaveButtonPressed() {
@@ -89,23 +108,34 @@ export default function Room(props) {
 
 
     // send a GET request to /api/get-room to fetch for room data using the roomcCode
-    fetch('/api/get-room' + '?code=' + roomCode)
-            .then((response) => {
-                // if no room, reset the roomCode state and redirect to home page
-                if (!response.ok) {
-                    props.leaveRoomCallback();
-                    navigate("/");
-                }
-                return response.json()
-            })
-            .then((data) => {
-                setVotesToSkip(data.votes_to_skip)
-                setGuestCanPause(data.guest_can_pause)
-                setIsHost(data.is_host)
-                if (isHost) {
-                    authenticateSpotify();
-                }
-            })
+    function getRoomDetails() {
+        fetch('/api/get-room' + '?code=' + roomCode)
+                .then((response) => {
+                    // if no room, reset the roomCode state and redirect to home page
+                    if (!response.ok) {
+                        props.leaveRoomCallback();
+                        navigate("/");
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    setVotesToSkip(data.votes_to_skip)
+                    setGuestCanPause(data.guest_can_pause)
+                    setIsHost(data.is_host)
+                    if (isHost) {
+                        authenticateSpotify();
+                    }
+                })
+    }
+
+    // fetch for room info everytime the Room page is rendered
+    getRoomDetails();
+    // fetch for song info every 1 second
+    useEffect(()=> {
+        setTimeout(()=>{
+            getCurrentSong();
+           }, 1000)
+    }, [song])
 
 
     // if showSettings is true, render the Settings component instead
@@ -122,7 +152,7 @@ export default function Room(props) {
                 </Typography>
             </Grid>
 
-            <Grid item xs={12} align="center">
+            {/* <Grid item xs={12} align="center">
                 <Typography variant="h6" component="h6">
                     Votes: {votesToSkip}
                 </Typography>
@@ -138,7 +168,9 @@ export default function Room(props) {
                 <Typography variant="h6" component="h6">
                     Host: {String(isHost)}
                 </Typography>
-            </Grid>
+            </Grid> */}
+
+            <MusicPlayer {...song} />
 
             {isHost ? renderSettingsButton() : null}
 
