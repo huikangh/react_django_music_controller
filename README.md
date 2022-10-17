@@ -98,3 +98,10 @@
 - added function, getCurrentSong(), in Room.js that sends an HTTP request to our backend endpoint to fetch for current song info
 - added new state, song, in Room.js that is an object storing all the needed information of the current playing song
 - added new React component, MusicPlayer.js, that takes in the song state with all the needed song info and renders a nice music player component
+
+#### Part#15
+
+- added functions pauseSong() and playSong() in MusicPlayer.js that handles frontend button press to play or pause the song by sending requests to our backend
+- added two url endpoints in spotify/urls.py, "pause" and "play" to handle frontend requests and route them to the corresponding views
+- added views PauseSong() and PlaySong() in spotify/views.py that handles play/pause song requests from the frontend calling either pause_song() or play_song() to pause or play the current song
+- added functions pause_song() and play_song() in spotify/util.py that calls the helper function execute_spotify_api_request() to send request the the Spotify API to play or pause the current song
