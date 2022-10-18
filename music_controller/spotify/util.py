@@ -94,3 +94,8 @@ def play_song(session_id):
 # function that calls the helper function to sends a pause song request to spotify api
 def pause_song(session_id):
     return execute_spotify_api_request(session_id, "player/pause", put_=True)  
+
+
+# function that calls the helper function to sends a next song request to spotify api
+def skip_song(session_id):
+    return execute_spotify_api_request(session_id, "player/next", post_=True)

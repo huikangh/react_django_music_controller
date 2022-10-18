@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from .util import *
 from api.models import Room
+from .models import Vote
+
 
 # view that returns an URL that we can use to Authenticate the Spotify application
 class AuthURL(APIView):
@@ -21,6 +23,7 @@ class AuthURL(APIView):
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
+
 
 
 # callback function that send another request to Spotify API to get access and refresh tokens
@@ -52,11 +55,13 @@ def spotify_callback(request, format=None):
     return redirect('frontend:')
 
 
+
 # view that tells us whether the user is authenticated
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         is_authenticated = is_spotify_authenticated(self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
+
 
 
 # view that sends another HTTP request to Spotify to retreive current song info
@@ -89,6 +94,8 @@ class CurrentSong(APIView):
                 artist_string += ", "
             name = artist.get('name')
             artist_string += name
+        votes = len(Vote.objects.filter(room=room, song_id=song_id))
+
         # combine all the needed info into an object
         song = {
             'title': item.get('name'),
@@ -97,23 +104,34 @@ class CurrentSong(APIView):
             'time': progress,
             'image_url': album_cover,
             'is_playing': is_playing,
-            'votes': 0,
+            'votes': votes,
+            'votes_required': room.votes_to_skip,
             'id': song_id
         }
+        self.update_room_song(room, song_id)
         return Response(song, status=status.HTTP_200_OK)
+
+    # helper function that updates the current song of a certain room
+    def update_room_song(self, room, song_id):
+        current_song = room.current_song
+        if current_song != song_id:
+            room.current_song = song_id
+            room.save(update_fields=['current_song'])
+            # delete all vote objects when we switch to a new song
+            votes = Vote.objects.filter(room=room).delete()
+
 
 
 # view that sends another HTTP request to Spotify to pause current song
 class PauseSong(APIView):
     def put(self, response, format=None):
-        print('\n HELLO')
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)[0]
         if self.request.session.session_key == room.host or room.guest_can_pause:
             pause_song(room.host)
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-
         return Response({}, status=status.HTTP_403_FORBIDDEN)
+
 
 
 # view that sends another HTTP request to Spotify to play current song
@@ -124,5 +142,28 @@ class PlaySong(APIView):
         if self.request.session.session_key == room.host or room.guest_can_pause:
             play_song(room.host)
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-
         return Response({}, status=status.HTTP_403_FORBIDDEN)
+
+
+
+class SkipSong(APIView):
+    def post(self, request, format=None):
+        # get the Room object of current room
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)[0]
+        votes_needed = room.votes_to_skip
+        # skip song if user is the host
+        if self.request.session.session_key == room.host:
+            # delete all the votes for the current song then skip
+            Vote.objects.filter(room=room, song_id=room.current_song).delete()
+            skip_song(room.host)
+        # if not, create a Vote object for the current vote
+        else:
+            Vote(user=self.request.session.session_key, room=room, song_id=room.current_song).save()
+            # then check whether there are enough votes
+            votes = Vote.objects.filter(room=room, song_id=room.current_song)
+            if len(votes) >= votes_needed:
+                votes.delete()
+                skip_song(room.host) 
+
+        return Response({}, status.HTTP_204_NO_CONTENT)

@@ -105,3 +105,12 @@
 - added two url endpoints in spotify/urls.py, "pause" and "play" to handle frontend requests and route them to the corresponding views
 - added views PauseSong() and PlaySong() in spotify/views.py that handles play/pause song requests from the frontend calling either pause_song() or play_song() to pause or play the current song
 - added functions pause_song() and play_song() in spotify/util.py that calls the helper function execute_spotify_api_request() to send request the the Spotify API to play or pause the current song
+
+#### Part#16
+
+- added function skipSong() in MusicPlayer.js that handles frontend button press to skip the song by sending requests to our backend
+- added an url endpoint in spotify/urls.py, "skip" to handle frontend requests and route them to the corresponding view
+- added view SkipSong() in spotify/views.py that handles skip song requests from the frontend by calling the skip_song() function
+- added function skip_song() spotify/util.py that calls the helper function execute_spotify_api_request() to send request the the Spotify API to go to the next song
+- updated the Room model in api/models.py by adding a current_song field
+- created a new model, Vote, in spotify/models.py that corresponds to a user's vote in a certain room on a certain song
