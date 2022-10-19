@@ -114,3 +114,8 @@
 - added function skip_song() spotify/util.py that calls the helper function execute_spotify_api_request() to send request the the Spotify API to go to the next song
 - updated the Room model in api/models.py by adding a current_song field
 - created a new model, Vote, in spotify/models.py that corresponds to a user's vote in a certain room on a certain song
+
+#### Part#17
+
+- added a new React component, Info.js, in frontend/src/components that serves as an info page.
+- added corresonpding button and function handler in HomePage.js to navigate to Info page.
